@@ -52,6 +52,8 @@ test_that("other plot.stanreg errors thrown correctly", {
                "not a valid MCMC function name")
   expect_error(plot(fit, plotfun = "ppc_hist"), 
                "use the 'pp_check' method")
+  expect_error(plot(fit, plotfun = "pairs"),
+               "To use 'mcmc_pairs' see help('pairs.stanreg').", fixed=TRUE)
   expect_error(plot(fit, plotfun = "stan_diag"), 
                "help('NUTS', 'bayesplot')", fixed = TRUE)
 })
@@ -125,13 +127,15 @@ test_that("plot.stanreg ok for vb", {
 
 # pairs.stanreg -----------------------------------------------------------
 context("pairs.stanreg")
+expect_bayesplot_grid <- function(x) testthat::expect_s3_class(x, "bayesplot_grid")
 test_that("pairs method ok", {
-  requireNamespace("rstan")
-  requireNamespace("KernSmooth")
-  expect_silent(pairs(fit, pars = c("period2", "log-posterior")))
-  expect_silent(pairs(fit, pars = "b[(Intercept) herd:15]", regex_pars = "Sigma"))
-  expect_silent(pairs(fit, pars = "b[(Intercept) herd:15]", regex_pars = "Sigma", 
-                      log = TRUE, condition = "lp__"))
+  expect_bayesplot_grid(pairs(fit, pars = c("period2", "log-posterior")))
+  expect_bayesplot_grid(pairs(fit, pars = "b[(Intercept) herd:15]", 
+                              regex_pars = "Sigma"))
+  expect_bayesplot_grid(pairs(fit, pars = "b[(Intercept) herd:15]", regex_pars = "Sigma", 
+                              condition = "lp__", diag_fun = "dens"))
+  expect_warning(pairs(fit, pars = c("period2", "log-posterior"), max_treedepth = 10), 
+                 "Ignoring user-specified argument 'max_treedepth'")
   expect_error(pairs(fitvb), regexp = "only available for models fit using MCMC")
   expect_error(pairs(fito), regexp = "only available for models fit using MCMC")
 })
