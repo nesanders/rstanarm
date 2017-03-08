@@ -114,7 +114,8 @@ stan_polr.fit <- function(x, y, wt = NULL, offset = NULL,
   } else { 
     pars <- c("zeta", "beta", if (is_skewed) "alpha", "mean_PPD")
   }
-  standata$do_residuals <- isTRUE(J > 2) && !prior_PD
+#   standata$do_residuals <- isTRUE(J > 2) && !prior_PD
+  standata$do_residuals <- FALSE;
   
   if (algorithm == "sampling") {
     sampling_args <- set_sampling_args(
