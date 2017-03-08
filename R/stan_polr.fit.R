@@ -129,6 +129,9 @@ stan_polr.fit <- function(x, y, wt = NULL, offset = NULL,
     stanfit <- rstan::vb(stanfit, pars = pars, data = standata, 
                          algorithm = algorithm, ...)
   }
+
+  print("Sampling complete")
+
   check_stanfit(stanfit)
   thetas <- extract(stanfit, pars = "beta", inc_warmup = TRUE, permuted = FALSE)
   betas <- apply(thetas, 1:2, FUN = function(theta) R_inv %*% theta)
