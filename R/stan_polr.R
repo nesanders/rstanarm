@@ -225,6 +225,7 @@ stan_polr <- function(formula, data, weights, ..., subset,
   residuals <- means[grep("^residuals", rownames(means)), ncol(means)]
   names(eta) <- names(mu) <- rownames(x)
   if (!prior_PD)
+    residuals <- rep(NA, times = N)
     names(residuals) <- rownames(x)
 
   stan_summary <- make_stan_summary(stanfit)
